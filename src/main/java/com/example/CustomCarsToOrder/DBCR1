@@ -1,0 +1,51 @@
+CREATE DATABASE custom_car_db;
+USE custom_car_db;
+
+CREATE TABLE supplier_master(
+	Supp_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+	Supp_name VARCHAR(20) NOT NULL,
+	Supp_email VARCHAR(60) NOT NULL,
+	Supp_phone VARCHAR(20) NOT NULL
+	);
+CREATE TABLE parts_type(
+	Prt_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+	Prt_name VARCHAR(60) NOT NULL,
+	Supp_id INTEGER, 
+	INDEX prt_type_index1 (supp_id),
+    FOREIGN KEY (Supp_id)
+        REFERENCES supplier_master(Supp_id)
+        ON DELETE CASCADE
+	);
+	
+CREATE TABLE orders_master(
+	Ord_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+	Ord_start_date DATE NOT NULL,
+	Ord_completion_date DATE NOT NULL,
+	Ord_status DATE NOT NULL
+	);
+	
+CREATE TABLE individual_parts(
+	Ind_Prt_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    Prt_id INTEGER, 
+	Serial_no VARCHAR(30) NOT NULL ,
+	Prt_Status VARCHAR(30) NOT NULL ,
+	Prt_price DOUBLE NOT NULL,
+	INDEX ind_prt_ind2 (prt_id),
+    FOREIGN KEY (prt_id)
+        REFERENCES parts_type(prt_id)
+        ON DELETE CASCADE
+	);
+		
+CREATE TABLE orders_inventory(
+	Ord_detail_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+	Ord_id INTEGER NOT NULL,
+	Ind_Prt_id INTEGER NOT NULL,
+	INDEX ord_ind3 (Ord_id),
+    FOREIGN KEY (Ord_id)
+        REFERENCES orders_master(Ord_id)
+        ON DELETE CASCADE,
+	INDEX ord_ind4 (Ind_Prt_id),
+    FOREIGN KEY (Ind_Prt_id)
+        REFERENCES individual_parts(Ind_Prt_id)
+        ON DELETE CASCADE
+	);
